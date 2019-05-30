@@ -1,0 +1,112 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Wed May 29 12:01:45 2019
+
+@author: Home
+"""
+
+import random
+
+#cardNum = ['2','3','4','5','6','7','8','9','10','J','Q','K','ACE']
+#numValue = {'2':2,'3':3,'4':4,'5':5,'6':6,'7':7,'8':8,'9':9,'10':10,'J':11,'Q':12,'K':13,'ACE':14}
+#suit = ['Clubs','Spades','Hearts','Diamonds']
+
+class Card(object):
+    NUM = (2,3,4,5,6,7,8,9,10,11,12,13,14)
+    
+    SUIT = ('Clubs','Spades','Hearts','Diamonds')
+    
+    def __init__(self, rank, suit):
+        self.rank = rank
+        self.suit = suit
+        
+    def __face__(self):
+        if self.rank == 14:
+            rank = 'ACE'
+        elif self.rank == 13:
+            rank = 'King'
+        elif self.rank == 12:
+            rank = 'Queen'
+        elif self.rank == 11:
+            rank = 'Jack'
+        else:
+            rank = self.rank
+        return str(rank) + " of " + self.suit
+
+
+class Deck(object):
+    def __init__(self):
+        self.deck = []
+        for suit in Card.SUIT:
+            for rank in Card.NUM:
+                card = Card(rank,suit)
+                self.deck.append(card)
+   
+    def shuffle(self):
+        random.shuffle(self.deck)
+    
+    def __len__(self):
+        return len(self.deck)
+
+    def deal(self):
+        if len(self) == 0:
+            return None
+        else:
+            self.deck.pop(0)
+
+        
+class Poker(object):
+    def __init__(self,numOfHands):
+        self.deck = Deck()
+        self.deck.shuffle()
+        self.hands = []
+        numCards_in_Hand = 5
+
+        for i in range(numOfHands):
+            hand = []
+            for j in range(numCards_in_Hand):
+                hand.append(self.deck.deal())
+                self.hands.append(hand)
+  
+    def play (self):
+        for i in range (len(self.hands)):
+            sortedHand = sorted(self.hands[i], reverse = True)
+            hand = ''
+            for card in sortedHand:
+                hand = hand + str(card) + ' '
+                print('Hand ' + str(i + 1) + ': ' + hand)
+    
+"""
+class Deal:
+    def __iter__(self):
+        self.a = Card
+        self.numOfCards = 0
+        return self
+    
+    def __dealCard__(self):
+        
+        
+    def __next__(self):
+        if self.a < 6:
+            x = self.a
+            self.a += 1
+            return x
+        else:
+            raise StopIteration
+      
+myHand = Deal()
+myiter = iter(myHand)
+
+for x in myHand:
+    print(x)
+"""
+
+#%%
+# asking how many players to start the game    
+    
+numPlayers = 0
+while numPlayers == 0:
+    print('How many players?')
+    numPlayers = int(input())
+
