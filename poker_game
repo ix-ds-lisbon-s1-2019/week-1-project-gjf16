@@ -8,19 +8,25 @@ Created on Wed May 29 12:01:45 2019
 
 import random
 
-#cardNum = ['2','3','4','5','6','7','8','9','10','J','Q','K','ACE']
-#numValue = {'2':2,'3':3,'4':4,'5':5,'6':6,'7':7,'8':8,'9':9,'10':10,'J':11,'Q':12,'K':13,'ACE':14}
-#suit = ['Clubs','Spades','Hearts','Diamonds']
+number_of_players = 0
+while number_of_players == 0:
+    print('How many players? ')
+    number_of_players = int(input())
+
+
+game= GamePlay(number_of_players)
+game.play()
+game.start()
 
 class Card(object):
     NUM = (2,3,4,5,6,7,8,9,10,11,12,13,14)
-    
+
     SUIT = ('Clubs','Spades','Hearts','Diamonds')
-    
+
     def __init__(self, rank, suit):
         self.rank = rank
         self.suit = suit
-        
+
     def __face__(self):
         if self.rank == 14:
             rank = 'ACE'
@@ -33,7 +39,15 @@ class Card(object):
         else:
             rank = self.rank
         return str(rank) + " of " + self.suit
-
+    
+    def __eq__(self,other): # equal to
+        return self.rank == other.rank
+        
+    def __lt__(self,other): # lesss than
+        return self.rank < other.rank
+        
+    def __gt__(self,other): # greater than
+        return self.rank > other.rank
 
 class Deck(object):
     def __init__(self):
@@ -42,71 +56,70 @@ class Deck(object):
             for rank in Card.NUM:
                 card = Card(rank,suit)
                 self.deck.append(card)
-   
+
     def shuffle(self):
         random.shuffle(self.deck)
-    
+
     def __len__(self):
         return len(self.deck)
 
     def deal(self):
-        if len(self) == 0:
+        if len(self) < 6:
             return None
         else:
             self.deck.pop(0)
 
-        
-class Poker(object):
-    def __init__(self,numOfHands):
+
+class GamePlay(object):
+    def __init__(self,number_of_players):
         self.deck = Deck()
         self.deck.shuffle()
         self.hands = []
-        numCards_in_Hand = 5
+        numCards_in_Hand = 0
 
-        for i in range(numOfHands):
+        for i in range(number_of_players):
             hand = []
             for j in range(numCards_in_Hand):
                 hand.append(self.deck.deal())
                 self.hands.append(hand)
-  
-    def play (self):
-        for i in range (len(self.hands)):
+       
+    def play(self):
+        for i in range(len(self.hands)):
             sortedHand = sorted(self.hands[i], reverse = True)
-            hand = ''
+            hand = 'idk'
             for card in sortedHand:
                 hand = hand + str(card) + ' '
-                print('Hand ' + str(i + 1) + ': ' + hand)
+                print('Hand: ' + str(i + 1) + ': ' + hand)
     
-"""
-class Deal:
-    def __iter__(self):
-        self.a = Card
-        self.numOfCards = 0
-        return self
-    
-    def __dealCard__(self):
+    def highCard(self,hand):
+        self.hand = hand
         
-        
-    def __next__(self):
-        if self.a < 6:
-            x = self.a
-            self.a += 1
-            return x
-        else:
-            raise StopIteration
-      
-myHand = Deal()
-myiter = iter(myHand)
-
-for x in myHand:
-    print(x)
-"""
-
-#%%
-# asking how many players to start the game    
     
-numPlayers = 0
-while numPlayers == 0:
-    print('How many players?')
-    numPlayers = int(input())
+    def start(self):
+        print('Welcome to Poker!')
+        #number_of_players = eval(input('How many players? '))
+        #while number_of_players == 0:
+           # print('How many players? ')
+            #number_of_players = int(input())
+        game = GamePlay(number_of_players)
+        game.play()  
+        
+        print('\n')
+        for i in range(number_of_players):
+            gameHand = game.hands[i]
+            print("Hand " + str(i+1) + ": ", end='')
+            GamePlay.highCard(gameHand)
+
+
+
+
+
+
+
+
+
+
+
+
+
 
