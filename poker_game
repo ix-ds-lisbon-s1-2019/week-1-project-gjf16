@@ -6,17 +6,22 @@ Created on Wed May 29 12:01:45 2019
 @author: Home
 """
 
+"""
+
+I tried to take a more difficult route using multiple classes. 
+As my first time with python in 6 years, I probably should have gone with an easier route.
+I wanted to challenge myself, and have definitley learned a ton.
+But this game does not work.
+I sat with Genc for a while and realized it was just problems earlier in the code that needed to be fixed
+prior to running later code.
+I ran out of time, but hopefully you can see where I was going with it.
+
+
+"""
+
+
+
 import random
-
-number_of_players = 0
-while number_of_players == 0:
-    print('How many players? ')
-    number_of_players = int(input())
-
-
-game= GamePlay(number_of_players)
-game.play()
-game.start()
 
 class Card(object):
     NUM = (2,3,4,5,6,7,8,9,10,11,12,13,14)
@@ -24,21 +29,24 @@ class Card(object):
     SUIT = ('Clubs','Spades','Hearts','Diamonds')
 
     def __init__(self, rank, suit):
-        self.rank = rank
-        self.suit = suit
-
+        self.rank = (2,3,4,5,6,7,8,9,10,11,12,13,14)
+        self.suits = ('Clubs','Spades','Hearts','Diamonds')
+        self.ranks = [2,3,4,5,6,7,8,9,10,11,12,13,14]
     def __face__(self):
-        if self.rank == 14:
-            rank = 'ACE'
-        elif self.rank == 13:
-            rank = 'King'
-        elif self.rank == 12:
-            rank = 'Queen'
-        elif self.rank == 11:
-            rank = 'Jack'
+       for i in range(self.ranks):
+        if self.ranks[i] == 14:
+            self.ranks[i] = 'ACE'
+        elif self.ranks[i] == 13:
+            self.ranks[i] = 'King'
+        elif self.ranks[i] == 12:
+            self.ranks[i] = 'Queen'
+        elif self.ranks[i] == 11:
+            self.ranks[i] = 'Jack'
         else:
-            rank = self.rank
-        return str(rank) + " of " + self.suit
+            self.ranks[i] = self.ranks[i]
+        return str(self.ranks) + " of " + self.suit
+    # should have been a dictionary instead of this
+    # here i tried to keep the value, and assign the value a name...
     
     def __eq__(self,other): # equal to
         return self.rank == other.rank
@@ -49,41 +57,44 @@ class Card(object):
     def __gt__(self,other): # greater than
         return self.rank > other.rank
 
-class Deck(object):
-    def __init__(self):
+class Deck(Card):
+    def __init__(self,number_of_players):
+        self.hand=[]
         self.deck = []
-        for suit in Card.SUIT:
-            for rank in Card.NUM:
+        #self.deck = Deck()
+        #self.deck.shuffle()
+        self.hands = [] # I need to get shuffled cards into this list
+        self.numCards_in_Hand = 0 
+        self.number_of_players=number_of_players
+    def shuffle(self):
+        for suit in self.suit:
+            for rank in self.rank:
                 card = Card(rank,suit)
                 self.deck.append(card)
-
-    def shuffle(self):
         random.shuffle(self.deck)
-
+        print(self.deck)
     def __len__(self):
         return len(self.deck)
 
     def deal(self):
-        if len(self) < 6:
-            return None
-        else:
-            self.deck.pop(0)
-
-
-class GamePlay(object):
-    def __init__(self,number_of_players):
-        self.deck = Deck()
-        self.deck.shuffle()
-        self.hands = []
-        numCards_in_Hand = 0
-
+        self.hands=self.deck
+        while len(self.numCards_in_Hand) < 6:
+            self.numCards_in_Hand += 1
+            
+        
         for i in range(number_of_players):
-            hand = []
-            for j in range(numCards_in_Hand):
-                hand.append(self.deck.deal())
-                self.hands.append(hand)
+            for j in range(self.numCards_in_Hand):
+                self.hand.append(self.hands())
+                self.hands.append(self.hand)
+class GamePlay(Deck):
+    #ef __init__(self,number_of_players):
+           
+
+        
        
     def play(self):
+        
+        
         for i in range(len(self.hands)):
             sortedHand = sorted(self.hands[i], reverse = True)
             hand = 'idk'
@@ -91,25 +102,34 @@ class GamePlay(object):
                 hand = hand + str(card) + ' '
                 print('Hand: ' + str(i + 1) + ': ' + hand)
     
-    def highCard(self,hand):
-        self.hand = hand
+    def highCard(self):
+        print(self.hands)
         
     
-    def start(self):
+    #def start(self):
         print('Welcome to Poker!')
         #number_of_players = eval(input('How many players? '))
         #while number_of_players == 0:
            # print('How many players? ')
             #number_of_players = int(input())
-        game = GamePlay(number_of_players)
-        game.play()  
+        #game = GamePlay(number_of_players)
+         
         
-        print('\n')
-        for i in range(number_of_players):
-            gameHand = game.hands[i]
-            print("Hand " + str(i+1) + ": ", end='')
-            GamePlay.highCard(gameHand)
+        #print('\n')
+        #for i in range(number_of_players):
+            #self.gameHand = self.hand[i]
+            #print("Hand " + str(i+1) + ": ", end='')
+            #GamePlay.highCard(gameHand)
 
+
+number_of_players = 0
+while number_of_players == 0:
+    print('How many players? ')
+    number_of_players = int(input())
+
+
+game= GamePlay(number_of_players)
+game.shuffle()
 
 
 
